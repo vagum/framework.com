@@ -2,6 +2,8 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-(new \App\Somecode)->test();
+use Somecode\Framework\Http\Request;
 
-dd('Hello, world!');
+$request = Request::createFromGlobals();
+
+dd($request);
