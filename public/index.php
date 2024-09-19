@@ -1,7 +1,17 @@
 <?php
 
-require_once dirname(__DIR__).'/vendor/autoload.php';
+define('BASE_PATH', dirname(__DIR__));
 
-(new \App\Somecode)->test();
+require_once BASE_PATH.'/vendor/autoload.php';
 
-dd('Hello world!');
+use Somecode\Framework\Http\Kernel;
+use Somecode\Framework\Http\Request;
+use Somecode\Framework\Routing\Router;
+
+$request = Request::createFromGlobals();
+
+$router = new Router;
+
+$kernel = new Kernel($router);
+$response = $kernel->handle($request);
+$response->send();
