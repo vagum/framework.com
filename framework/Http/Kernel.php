@@ -2,6 +2,7 @@
 
 namespace Somecode\Framework\Http;
 
+use Somecode\Framework\Http\Exceptions\HttpException;
 use Somecode\Framework\Routing\RouterInterface;
 
 class Kernel
@@ -16,8 +17,10 @@ class Kernel
 
             [$routerHandler,$vars] = $this->router->dispatch($request);
             $response = call_user_func_array($routerHandler, $vars);
-        } catch (\Throwable $exception) {
-            $response = new Response($exception->getMessage(), statusCode: 500);
+        } catch (HttpException $e) {
+            $response = new Response($e->getMessage(), $e->getStatusCode());
+        } catch (\Throwable $e) {
+            $response = new Response($e->getMessage(), statusCode: 500);
         }
 
         return $response;
