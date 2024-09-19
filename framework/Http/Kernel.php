@@ -37,9 +37,8 @@ class Kernel
             $request->getPath()
         );
 
-        [$status, [$controller,$method], $vars] = $routeInfo;
-        $response = (new $controller)->$method($vars);
+        [$status, $handler, $vars] = $routeInfo;
 
-        return $response;
+        return $handler($vars);
     }
 }
