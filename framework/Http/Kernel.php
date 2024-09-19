@@ -2,43 +2,23 @@
 
 namespace Somecode\Framework\Http;
 
-use FastRoute\RouteCollector;
-
-use function FastRoute\simpleDispatcher;
+use Somecode\Framework\Routing\RouterInterface;
 
 class Kernel
 {
+    public function __construct(
+        private RouterInterface $router,
+    ) {}
+
     public function handle(Request $request): Response
     {
-        $dispatcher = simpleDispatcher(function (RouteCollector $collector) {
+        try {
 
-            $routes = include BASE_PATH.'/routes/web.php';
-
-            foreach ($routes as $route) {
-                $collector->addRoute(...$route);
-            }
-
-            //            $collector->get('/', function () {
-            //                $content = '<h1>Some Content</h1>';
-            //
-            //                return new Response($content);
-            //            });
-            //
-            //            $collector->get('/posts/{id:\d+}', function (array $vars) {
-            //                $content = '<h1>Posts - '.$vars['id'].'</h1>';
-            //
-            //                return new Response($content);
-            //            });
-
-        });
-
-        $routeInfo = $dispatcher->dispatch(
-            $request->getMethod(),
-            $request->getPath()
-        );
-
-        [$status, [$controller,$method], $vars] = $routeInfo;
-        $response = call_user_func_array([new $controller, $method], $vars);
+            [$routerHandler,$vars] = $this->router->dispatch($request);
+            $response = call_user_func_array($routerHandler, $vars);
+        } catch (\Throwable $exception) {
+            $response = new Response($exception->getMessage(), statusCode: 500);
+        }
 
         return $response;
     }
