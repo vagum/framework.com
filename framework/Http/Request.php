@@ -9,7 +9,7 @@ class Request
         private readonly array $postData,
         private readonly array $cookies,
         private readonly array $files,
-        private readonly array $server,
+        public readonly array $server,
     ) {}
 
     public static function CreateFromGlobals(): static

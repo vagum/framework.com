@@ -2,11 +2,11 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
+use Somecode\Framework\Http\Kernel;
 use Somecode\Framework\Http\Request;
-use Somecode\Framework\Http\Response;
 
 $request = Request::createFromGlobals();
 
-$content = '<h1>Hello World!</h1>';
-$response = new Response($content, 200, []);
+$kernel = new Kernel;
+$response = $kernel->handle($request);
 $response->send();
