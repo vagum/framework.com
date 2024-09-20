@@ -1,0 +1,12 @@
+{
+    "name": "somecode/framework",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Somecode\\Framework\\": "src"
+        }
+    },
+    "require": {
+        "nikic/fast-route": "^1.3"
+    }
+}
