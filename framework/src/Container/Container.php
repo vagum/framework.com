@@ -3,6 +3,7 @@
 namespace Somecode\Framework\Container;
 
 use Psr\Container\ContainerInterface;
+use Somecode\Framework\Container\Exceptions\ContainerException;
 
 class Container implements ContainerInterface
 {
@@ -10,6 +11,12 @@ class Container implements ContainerInterface
 
     public function add(string $id, string|object|null $concrete = null)
     {
+        if (is_null($concrete)) {
+            if (! class_exists($id)) {
+                throw new ContainerException("Service $id not found");
+            }
+            $concrete = $id;
+        }
         $this->services[$id] = $concrete;
     }
 
