@@ -4,6 +4,7 @@ namespace Somecode\Framework\Routing;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use League\Container\Container;
 use Somecode\Framework\Http\Exceptions\MethodNotAllowedException;
 use Somecode\Framework\Http\Exceptions\RouteNotFoundException;
 use Somecode\Framework\Http\Request;
@@ -14,13 +15,14 @@ class Router implements RouterInterface
 {
     private array $routes;
 
-    public function dispatch(Request $request)
+    public function dispatch(Request $request, Container $container): array
     {
         [$handler,$vars] = $this->extractRouterInfo($request);
 
         if (is_array($handler)) {
-            [$controller,$method] = $handler;
-            $handler = [new $controller, $method];
+            [$controllerId,$method] = $handler;
+            $controller = $container->get($controllerId);
+            $handler = [$controller, $method];
 
         }
 
