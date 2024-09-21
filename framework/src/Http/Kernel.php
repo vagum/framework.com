@@ -21,7 +21,7 @@ class Kernel
     {
         try {
 
-            throw new \Exception('Some fatal error');
+            throw new \Exception('Some error');
             [$routerHandler,$vars] = $this->router->dispatch($request, $this->container);
             $response = call_user_func_array($routerHandler, $vars);
         } catch (\Exception $e) {
