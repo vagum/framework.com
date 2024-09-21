@@ -33,6 +33,28 @@ class Container implements ContainerInterface
         return $instance;
     }
 
+    private function resolveClassDependencies(array $constructorParams): array
+    {
+        // 1. Инициализировать пустой список зависимостей
+        $classDependencies = [];
+
+        // 2. Попытаться найти и создать экземпляр
+        /** @var \ReflectionParameter $constructorParam */
+        foreach ($constructorParams as $constructorParam) {
+            // Получить тип параметра
+            $serviceType = $constructorParam->gettype();
+
+            // Попытаться создать экземпляр используя
+            $service = $this->get($serviceType->getName());
+
+            // Добавить сервис в classDependencies
+            $classDependencies[] = $service;
+        }
+
+        // 3. Вернуть массив classDependencies
+        return $classDependencies;
+    }
+
     public function has(string $id): bool
     {
         return array_key_exists($id, $this->services);

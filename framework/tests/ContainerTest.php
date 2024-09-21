@@ -36,8 +36,15 @@ class ContainerTest extends TestCase
     {
         $container = new Container;
         $container->add('somecode-class', SomecodeClass::class);
+
+        /** @var SomecodeClass $somecode */
         $somecode = $container->get('somecode-class');
+
+        $areaweb = $somecode->getAreaWeb();
+
         $this->assertInstanceOf(AreaWeb::class, $somecode->getAreaWeb());
+        $this->assertInstanceOf(YouTube::class, $areaweb->getYouTube());
+        $this->assertInstanceOf(Telegram::class, $areaweb->getTelegram());
 
     }
 }
