@@ -8,6 +8,8 @@ use Somecode\Framework\Http\Kernel;
 use Somecode\Framework\Routing\Router;
 use Somecode\Framework\Routing\RouterInterface;
 use Symfony\Component\Dotenv\Dotenv;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 $dotenv = new Dotenv;
 $dotenv->load(BASE_PATH.'/.env');
@@ -15,14 +17,14 @@ $dotenv->load(BASE_PATH.'/.env');
 // Application parameters
 
 $routes = include BASE_PATH.'/routes/web.php';
+$appEnv = $_ENV['APP_ENV'] ?? 'local';
+$viewPath = BASE_PATH.'/views';
 
 // Application services
 
 $container = new Container;
 
 $container->delegate(new ReflectionContainer(true));
-
-$appEnv = $_ENV['APP_ENV'] ?? 'local';
 
 $container->add('APP_ENV', new StringArgument($appEnv));
 
@@ -34,5 +36,11 @@ $container->extend(RouterInterface::class)
 $container->add(Kernel::class)
     ->addArgument(RouterInterface::class)
     ->addArgument($container);
+
+$container->addShared('twig-loader', FileSystemLoader::class)
+    ->addArgument(new StringArgument($viewPath));
+
+$container->addShared(Environment::class)
+    ->addArgument('twig-loader');
 
 return $container;
