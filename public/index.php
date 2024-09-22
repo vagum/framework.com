@@ -9,7 +9,7 @@ use Somecode\Framework\Http\Request;
 
 $request = Request::createFromGlobals();
 
-/** @var \League\Container\Container $container */
+/** @var League\Container\Container $container */
 $container = require BASE_PATH.'/config/services.php';
 
 $kernel = $container->get(Kernel::class);
