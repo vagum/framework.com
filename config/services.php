@@ -5,6 +5,7 @@ use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
+use Somecode\Framework\Console\Kernel as ConsoleKernel;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Dbal\ConnectionFactory;
 use Somecode\Framework\Http\Kernel;
@@ -29,6 +30,8 @@ $databaseUrl = 'pdo-mysql://lemp:lemp@localhost:3306/lemp?charset=utf8mb4';
 $container = new Container;
 
 $container->delegate(new ReflectionContainer(true));
+
+$container->add('framework-commands-namespace', new stringArgument('Somecode\\Framework\\Console\\Commands\\'));
 
 $container->add('APP_ENV', new StringArgument($appEnv));
 
@@ -56,5 +59,8 @@ $container->add(ConnectionFactory::class)
 $container->addShared(Connection::class, function () use ($container): Connection {
     return $container->get(ConnectionFactory::class)->create();
 });
+
+$container->add(ConsoleKernel::class)
+    ->addArgument($container);
 
 return $container;
