@@ -14,11 +14,12 @@ class HomeController extends AbstractController
 
     public function index(): Response
     {
-        dd($this->container->get('twig'));
 
         $content = '<h1>Hello, World!!!</h1><br>';
-        $content .= '<a href="'.$this->youTube->getChannelUrl().'">YouTube Channel</a>';
+        $content .= '<a href="{{ youTubeChannel }}">YouTube Channel</a>';
 
-        return new Response($content);
+        return $this->render($content, [
+            'youTubeChannel' => $this->youTube->getChannelUrl(),
+        ]);
     }
 }
