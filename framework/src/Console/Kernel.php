@@ -20,7 +20,7 @@ class Kernel
         // 2. Запуск команды
 
         $status = $this->application->run();
-        dd($status);
+
         // 3. Возвращаем код
 
         return 0;
