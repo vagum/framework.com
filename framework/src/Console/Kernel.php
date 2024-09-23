@@ -7,7 +7,8 @@ use Psr\Container\ContainerInterface;
 class Kernel
 {
     public function __construct(
-        private ContainerInterface $container
+        private ContainerInterface $container,
+        private Application $application
     ) {}
 
     public function handle(): int
@@ -18,6 +19,8 @@ class Kernel
 
         // 2. Запуск команды
 
+        $status = $this->application->run();
+        dd($status);
         // 3. Возвращаем код
 
         return 0;
@@ -50,7 +53,6 @@ class Kernel
                     ->getDefaultValue();
 
                 $this->container->add("console:$name", $command);
-                dd($this->container);
             }
 
         }
