@@ -6,6 +6,7 @@ use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use Somecode\Framework\Console\Application;
+use Somecode\Framework\Console\Commands\MigrateCommand;
 use Somecode\Framework\Console\Kernel as ConsoleKernel;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Dbal\ConnectionFactory;
@@ -67,5 +68,8 @@ $container->add(Application::class)
 $container->add(ConsoleKernel::class)
     ->addArgument($container)
     ->addArgument(Application::class);
+
+$container->add('console:migrate', MigrateCommand::class)
+    ->addArgument(Connection::class);
 
 return $container;

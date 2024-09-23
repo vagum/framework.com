@@ -28,10 +28,25 @@ class Application
         $command = $this->container->get("console:$commandName");
 
         // 4. Получаем опции и аргументы
+        $args = array_slice($argv, 2);
+        $options = $this->parseOptions($args);
 
         // 5. Выполнить команду, возвращая код статуса
-        $status = $command->execute();
+        $status = $command->execute($options);
 
         return $status;
+    }
+
+    public function parseOptions(array $args): array
+    {
+        $options = [];
+        foreach ($args as $arg) {
+            if (str_starts_with($arg, '--')) {
+                $option = explode('=', substr($arg, 2));
+                $options[$option[0]] = $option[1] ?? true;
+            }
+        }
+
+        return $options;
     }
 }
