@@ -14,7 +14,8 @@ class MigrateCommand implements CommandInterface
     private const MIGRATIONS_TABLE = 'migrations';
 
     public function __construct(
-        private Connection $connection
+        private Connection $connection,
+        private string $migrationsPath
     ) {}
 
     public function execute(array $parameters = []): int
@@ -32,7 +33,13 @@ class MigrateCommand implements CommandInterface
             $appliedMigrations = $this->getAppliedMigrations();
 
             // 3. Получить $migrationFiles из папки миграций
+
+            $migrationFiles = $this->getMigrationFiles();
+
             // 4. Получить миграции для применения
+
+            $migrationsToApply = array_values(array_diff($migrationFiles, $appliedMigrations));
+
             // 5. Создать SQL-запрос для миграций, которые еще не были выполнены
             // 6. Добавить миграцию в базу данных
             // 7. Выполнить SQL-запрос
@@ -73,7 +80,7 @@ class MigrateCommand implements CommandInterface
         }
     }
 
-    private function getAppliedMigrations()
+    private function getAppliedMigrations(): array
     {
         $queryBuilder = $this->connection->createQueryBuilder();
 
@@ -83,5 +90,16 @@ class MigrateCommand implements CommandInterface
             ->executeQuery()
             ->fetchFirstColumn();
 
+    }
+
+    private function getMigrationFiles(): array
+    {
+        $migrationFiles = scandir($this->migrationsPath);
+
+        $filteredFiles = array_filter($migrationFiles, function ($fileName) {
+            return ! in_array($fileName, ['.', '..']);
+        });
+
+        return array_values($filteredFiles);
     }
 }
