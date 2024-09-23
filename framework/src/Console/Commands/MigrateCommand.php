@@ -19,15 +19,31 @@ class MigrateCommand implements CommandInterface
 
     public function execute(array $parameters = []): int
     {
-        // 1. Создать таблицу миграций (migrations), если таблица еще не существует
-        $this->createMigrationsTable();
+        try {
 
-        // 2. Получить $appliedMigrations (миграции, которые уже есть в таблице migrations)
-        // 3. Получить $migrationFiles из папки миграций
-        // 4. Получить миграции для применения
-        // 5. Создать SQL-запрос для миграций, которые еще не были выполнены
-        // 6. Добавить миграцию в базу данных
-        // 7. Выполнить SQL-запрос
+            // 1. Создать таблицу миграций (migrations), если таблица еще не существует
+
+            $this->createMigrationsTable();
+
+            $this->connection->beginTransaction();
+
+            // 2. Получить $appliedMigrations (миграции, которые уже есть в таблице migrations)
+
+            $appliedMigrations = $this->getAppliedMigrations();
+
+            // 3. Получить $migrationFiles из папки миграций
+            // 4. Получить миграции для применения
+            // 5. Создать SQL-запрос для миграций, которые еще не были выполнены
+            // 6. Добавить миграцию в базу данных
+            // 7. Выполнить SQL-запрос
+
+            $this->connection->commit();
+
+        } catch (\Throwable $e) {
+            $this->connection->rollBack();
+
+            $throw = $e;
+        }
 
         return 0;
     }
@@ -55,6 +71,17 @@ class MigrateCommand implements CommandInterface
 
             echo 'Migrations table created!'.PHP_EOL;
         }
-        echo 'Nothing to add. Migrations table already exist!'.PHP_EOL;
+    }
+
+    private function getAppliedMigrations()
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        return $queryBuilder
+            ->select('migration')
+            ->from(self::MIGRATIONS_TABLE)
+            ->executeQuery()
+            ->fetchFirstColumn();
+
     }
 }
