@@ -3,11 +3,15 @@
 namespace App\Controllers;
 
 use App\Entities\Post;
+use App\Services\PostService;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Http\Response;
 
 class PostController extends AbstractController
 {
+    public function __construct(
+        private PostService $service) {}
+
     public function show(int $id): Response
     {
         return $this->render('posts.html.twig', [
@@ -26,6 +30,8 @@ class PostController extends AbstractController
             $this->request->postData['title'],
             $this->request->postData['body']
         );
+
+        $post = $this->service->save($post);
         dd($post);
     }
 }
