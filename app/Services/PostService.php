@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entities\Post;
 use Doctrine\DBAL\Connection;
+use Somecode\Framework\Http\Exceptions\NotFoundException;
 
 class PostService
 {
@@ -57,5 +58,15 @@ class PostService
             createdAt: new \DateTimeImmutable($post['created_at'])
         );
 
+    }
+
+    public function findOrFail(int $id): Post
+    {
+        $post = $this->find($id);
+        if (is_null($post)) {
+            throw new NotFoundException("Post $id not found");
+        }
+
+        return $post;
     }
 }
