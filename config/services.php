@@ -15,7 +15,7 @@ use Somecode\Framework\Routing\Router;
 use Somecode\Framework\Routing\RouterInterface;
 use Somecode\Framework\Session\Session;
 use Somecode\Framework\Session\SessionInterface;
-use SomeCode\Framework\Template\TwigFactory;
+use Somecode\Framework\Template\TwigFactory;
 use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv;
@@ -25,7 +25,7 @@ $dotenv->load(BASE_PATH.'/.env');
 
 $routes = include BASE_PATH.'/routes/web.php';
 $appEnv = $_ENV['APP_ENV'] ?? 'local';
-$viewPath = BASE_PATH.'/views';
+$viewsPath = BASE_PATH.'/views';
 $databaseUrl = 'pdo-mysql://lemp:lemp@localhost:3306/lemp?charset=utf8mb4';
 
 // Application services
@@ -47,10 +47,10 @@ $container->add(Kernel::class)
     ->addArgument(RouterInterface::class)
     ->addArgument($container);
 
-$container->add(SessionInterface::class, Session::class);
+$container->addShared(SessionInterface::class, Session::class);
 
 $container->add('twig-factory', TwigFactory::class)
-    ->addArgument([new StringArgument($viewPath), SessionInterface::class]);
+    ->addArguments([new StringArgument($viewsPath), SessionInterface::class]);
 
 $container->addShared('twig', function () use ($container) {
     return $container->get('twig-factory')->create();
