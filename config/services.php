@@ -13,6 +13,7 @@ use Somecode\Framework\Dbal\ConnectionFactory;
 use Somecode\Framework\Http\Kernel;
 use Somecode\Framework\Http\Middleware\RequestHandler;
 use Somecode\Framework\Http\Middleware\RequestHandlerInterface;
+use Somecode\Framework\Http\Middleware\RouterDispatch;
 use Somecode\Framework\Routing\Router;
 use Somecode\Framework\Routing\RouterInterface;
 use Somecode\Framework\Session\Session;
@@ -84,5 +85,11 @@ $container->add(ConsoleKernel::class)
 $container->add('console:migrate', MigrateCommand::class)
     ->addArgument(Connection::class)
     ->addArgument(new StringArgument(BASE_PATH.'/database/migrations'));
+
+$container->add(RouterDispatch::class)
+    ->addArguments([
+        RouterInterface::class,
+        $container,
+    ]);
 
 return $container;
