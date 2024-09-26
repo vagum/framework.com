@@ -4,6 +4,7 @@ namespace Somecode\Framework\Http;
 
 use League\Container\Container;
 use Somecode\Framework\Http\Exceptions\HttpException;
+use Somecode\Framework\Http\Middleware\RequestHandlerInterface;
 use Somecode\Framework\Routing\RouterInterface;
 
 class Kernel
@@ -12,7 +13,8 @@ class Kernel
 
     public function __construct(
         private RouterInterface $router,
-        private Container $container
+        private Container $container,
+        private RequestHandlerInterface $requestHandler
     ) {
         $this->appEnv = $this->container->get('APP_ENV');
     }
@@ -20,9 +22,10 @@ class Kernel
     public function handle(Request $request): Response
     {
         try {
+            $response = $this->requestHandler->handle($request);
 
-            [$routerHandler,$vars] = $this->router->dispatch($request, $this->container);
-            $response = call_user_func_array($routerHandler, $vars);
+            //            [$routerHandler,$vars] = $this->router->dispatch($request, $this->container);
+            //            $response = call_user_func_array($routerHandler, $vars);
         } catch (\Exception $e) {
             $response = $this->createExceptionResponse($e);
         }

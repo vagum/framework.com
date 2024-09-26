@@ -11,6 +11,8 @@ use Somecode\Framework\Console\Kernel as ConsoleKernel;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Dbal\ConnectionFactory;
 use Somecode\Framework\Http\Kernel;
+use Somecode\Framework\Http\Middleware\RequestHandler;
+use Somecode\Framework\Http\Middleware\RequestHandlerInterface;
 use Somecode\Framework\Routing\Router;
 use Somecode\Framework\Routing\RouterInterface;
 use Somecode\Framework\Session\Session;
@@ -43,9 +45,14 @@ $container->add(RouterInterface::class, Router::class);
 $container->extend(RouterInterface::class)
     ->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
 
+$container->add(RequestHandlerInterface::class, RequestHandler::class);
+
 $container->add(Kernel::class)
-    ->addArgument(RouterInterface::class)
-    ->addArgument($container);
+    ->addArguments([
+        RouterInterface::class,
+        $container,
+        RequestHandlerInterface::class,
+    ]);
 
 $container->addShared(SessionInterface::class, Session::class);
 
