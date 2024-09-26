@@ -7,7 +7,7 @@ use Somecode\Framework\Http\Response;
 
 class Authenticate implements MiddlewareInterface
 {
-    private bool $authenticated = false;
+    private bool $authenticated = true;
 
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {

@@ -2,6 +2,7 @@
 
 namespace Somecode\Framework\Http\Middleware;
 
+use Psr\Container\ContainerInterface;
 use Somecode\Framework\Http\Request;
 use Somecode\Framework\Http\Response;
 
@@ -11,6 +12,10 @@ class RequestHandler implements RequestHandlerInterface
         Authenticate::class,
         Success::class,
     ];
+
+    public function __construct(
+        private ContainerInterface $container
+    ) {}
 
     public function handle(Request $request): Response
     {
@@ -22,12 +27,13 @@ class RequestHandler implements RequestHandlerInterface
         }
 
         // Получить следующий middleware-класс для выполнения
-        /** @var MiddlewareInterface $middlewareClass */
         $middlewareClass = array_shift($this->middleware);
 
         // Создать новый экземпляр вызова процесса middleware на нем
 
-        $response = (new $middlewareClass)->process($request, $this);
+        $middleware = $this->container->get($middlewareClass);
+
+        $response = $middleware->process($request, $this);
 
         return $response;
     }
