@@ -7,13 +7,12 @@ use App\Services\PostService;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Http\RedirectResponse;
 use Somecode\Framework\Http\Response;
-use Somecode\Framework\Session\SessionInterface;
 
 class PostController extends AbstractController
 {
     public function __construct(
         private PostService $service,
-        private SessionInterface $session
+
     ) {}
 
     public function show(int $id): Response
@@ -39,7 +38,7 @@ class PostController extends AbstractController
 
         $post = $this->service->save($post);
 
-        $this->session->setFlash('success', 'Post successfully created!');
+        $this->request->getSession()->setFlash('success', 'Post successfully created!');
 
         return new RedirectResponse("/posts/{$post->getId()}");
     }

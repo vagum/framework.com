@@ -4,16 +4,18 @@ namespace Somecode\Framework\Http\Middleware;
 
 use Somecode\Framework\Http\Request;
 use Somecode\Framework\Http\Response;
+use Somecode\Framework\Session\SessionInterface;
 
-class Authenticate implements MiddlewareInterface
+class StartSession implements MiddlewareInterface
 {
-    private bool $authenticated = true;
+    public function __construct(
+        private SessionInterface $session,
+    ) {}
 
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
-        if (! $this->authenticated) {
-            return new Response('Authentication Required', 401);
-        }
+        $this->session->start();
+        $request->setSession($this->session);
 
         return $handler->handle($request);
     }
