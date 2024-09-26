@@ -3,9 +3,9 @@
 {% block main %}
     {% if session().hasFlash('success') %}
     <div class="alert alert-success">
-        {% for message in session().getFlash('success') %}
+         {% for message in session().getFlash('success') %}
             <p>{{ message }}</p>
-        {% endfor %}
+         {% endfor %}
     </div>
     {% endif %}
     <div class="bg-body-tertiary p-5 rounded">
