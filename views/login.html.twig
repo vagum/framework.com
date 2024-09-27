@@ -4,11 +4,7 @@
     <div class="bg-body-tertiary p-5 rounded">
         {%  if session().hasFlash('error') %}
         <div class="alert alert-danger">
-            <ul class="m-0">
-                {% for error in session().getFlash('error') %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
+                {{ session().getFlash('error')[0] }}
         </div>
         {% endif %}
         <form method="post" action="/login">

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Somecode\Framework\Authentication\SessionAuthInterface;
 use Somecode\Framework\Controller\AbstractController;
+use Somecode\Framework\Http\RedirectResponse;
 use Somecode\Framework\Http\Response;
 
 class LoginController extends AbstractController
@@ -17,15 +18,21 @@ class LoginController extends AbstractController
         return $this->render('login.html.twig');
     }
 
-    public function login()
+    public function login(): RedirectResponse
     {
         $isAuth = $this->sessionAuth->authenticate(
             $this->request->input('email'),
             $this->request->input('password'),
         );
 
-        if ($isAuth) {
-            dd($this->sessionAuth->getUser());
+        if (! $isAuth) {
+            $this->request->getSession()->setFlash('error', 'Invalid email or password');
+
+            return new RedirectResponse('/login');
         }
+
+        $this->request->getSession()->setFlash('success', 'You are now logged in');
+
+        return new RedirectResponse('/dashboard');
     }
 }
