@@ -4,6 +4,10 @@ namespace Somecode\Framework\Authentication;
 
 class SessionAuthentication implements SessionAuthInterface
 {
+    public function __construct(
+        private UserServiceInterface $userService
+    ) {}
+
     public function authenticate(string $email, string $password): bool
     {
         $user = $this->userService->findByEmail($email);
