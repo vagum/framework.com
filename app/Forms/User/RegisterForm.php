@@ -2,6 +2,8 @@
 
 namespace App\Forms\User;
 
+use App\Entities\User;
+
 class RegisterForm
 {
     private ?string $name;
@@ -19,6 +21,19 @@ class RegisterForm
         $this->password = $password;
         $this->passwordConfirmation = $passwordConfirmation;
 
+    }
+
+    public function save(): User
+    {
+        $user = User::create(
+            $this->email,
+            $this->password,
+            new \DateTimeImmutable,
+            $this->name);
+
+        $user = $this->userService->store($user);
+
+        return $user;
     }
 
     public function getValidationErrors(): array
