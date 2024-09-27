@@ -2,4 +2,11 @@
 
 namespace Somecode\Framework\Authentication;
 
-interface AuthUserInterface {}
+interface AuthUserInterface
+{
+    public function getId(): int;
+
+    public function getEmail(): string;
+
+    public function getPassword(): string;
+}
