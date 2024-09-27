@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Forms\User\RegisterForm;
 use Somecode\Framework\Controller\AbstractController;
+use Somecode\Framework\Http\RedirectResponse;
 use Somecode\Framework\Http\Response;
 
 class RegisterController extends AbstractController
@@ -28,7 +29,11 @@ class RegisterController extends AbstractController
 
         if ($form->hasValidationErrors()) {
 
-            dd($form->getValidationErrors());
+            foreach ($form->getValidationErrors() as $error) {
+                $this->request->getSession()->setFlash('error', $error);
+            }
+
+            return new RedirectResponse('/register');
         }
 
         // 2. Валидация

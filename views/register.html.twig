@@ -2,6 +2,15 @@
 
 {% block main %}
     <div class="bg-body-tertiary p-5 rounded">
+        {%  if session().hasFlash('error') %}
+        <div class="alert alert-danger">
+            <ul class="m-0">
+                {% for error in session().getFlash('error') %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
         <form method="post" action="/register">
             <div class="mb-3">
                 <label for="name" class="form-label">Имя</label>
