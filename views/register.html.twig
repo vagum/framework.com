@@ -11,6 +11,11 @@
             </ul>
         </div>
         {% endif %}
+        {%  if session().hasFlash('success') %}
+            <div class="alert alert-success">
+                    {{ session().getFlash('success')[0] }}
+            </div>
+        {% endif %}
         <form method="post" action="/register">
             <div class="mb-3">
                 <label for="name" class="form-label">Имя</label>
@@ -22,11 +27,11 @@
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Пароль</label>
-                <input name="password" value="1232233" type="password" class="form-control" id="password">
+                <input name="password" value="12345678" type="password" class="form-control" id="password">
             </div>
             <div class="mb-3">
                 <label for="password_confirmation" class="form-label">Подтверждение пароля</label>
-                <input name="password_confirmation" value="1232233" type="password" class="form-control" id="password_confirmation">
+                <input name="password_confirmation" value="12345678" type="password" class="form-control" id="password_confirmation">
             </div>
             <button type="submit" class="btn btn-primary">Продолжить</button>
         </form>
