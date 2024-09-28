@@ -14,6 +14,7 @@ use Somecode\Framework\Console\Kernel as ConsoleKernel;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Dbal\ConnectionFactory;
 use Somecode\Framework\Http\Kernel;
+use Somecode\Framework\Http\Middleware\ExtractRouteInfo;
 use Somecode\Framework\Http\Middleware\RequestHandler;
 use Somecode\Framework\Http\Middleware\RequestHandlerInterface;
 use Somecode\Framework\Http\Middleware\RouterDispatch;
@@ -100,5 +101,8 @@ $container->add(SessionAuthInterface::class, SessionAuthentication::class)
         UserService::class,
         SessionInterface::class,
     ]);
+
+$container->add(ExtractRouteInfo::class)
+    ->addArgument(new ArrayArgument($routes));
 
 return $container;
