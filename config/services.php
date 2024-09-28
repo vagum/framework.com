@@ -47,9 +47,6 @@ $container->add('APP_ENV', new StringArgument($appEnv));
 
 $container->add(RouterInterface::class, Router::class);
 
-$container->extend(RouterInterface::class)
-    ->addMethodCall('registerRoutes', [new ArrayArgument($routes)]);
-
 $container->add(RequestHandlerInterface::class, RequestHandler::class)
     ->addArgument($container);
 
