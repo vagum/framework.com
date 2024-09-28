@@ -9,6 +9,7 @@ use Somecode\Framework\Http\Response;
 class RequestHandler implements RequestHandlerInterface
 {
     private array $middleware = [
+        ExtractRouteInfo::class,
         StartSession::class,
         Authenticate::class,
         RouterDispatch::class,
