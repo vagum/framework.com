@@ -10,7 +10,7 @@ use Somecode\Framework\Http\Response;
 class LoginController extends AbstractController
 {
     public function __construct(
-        private SessionAuthInterface $sessionAuth
+        private readonly SessionAuthInterface $auth
     ) {}
 
     public function form(): Response
@@ -20,7 +20,7 @@ class LoginController extends AbstractController
 
     public function login(): RedirectResponse
     {
-        $isAuth = $this->sessionAuth->authenticate(
+        $isAuth = $this->auth->authenticate(
             $this->request->input('email'),
             $this->request->input('password'),
         );
@@ -36,5 +36,10 @@ class LoginController extends AbstractController
         return new RedirectResponse('/dashboard');
     }
 
-    public function logout() {}
+    public function logout(): RedirectResponse
+    {
+        $this->auth->logout();
+
+        return new RedirectResponse('/login');
+    }
 }
