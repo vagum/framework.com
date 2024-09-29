@@ -13,6 +13,7 @@ use Somecode\Framework\Console\Commands\MigrateCommand;
 use Somecode\Framework\Console\Kernel as ConsoleKernel;
 use Somecode\Framework\Controller\AbstractController;
 use Somecode\Framework\Dbal\ConnectionFactory;
+use Somecode\Framework\Event\EventDispatcher;
 use Somecode\Framework\Http\Kernel;
 use Somecode\Framework\Http\Middleware\ExtractRouteInfo;
 use Somecode\Framework\Http\Middleware\RequestHandler;
@@ -52,9 +53,9 @@ $container->add(RequestHandlerInterface::class, RequestHandler::class)
 
 $container->add(Kernel::class)
     ->addArguments([
-        RouterInterface::class,
         $container,
         RequestHandlerInterface::class,
+        EventDispatcher::class,
     ]);
 
 $container->addShared(SessionInterface::class, Session::class);

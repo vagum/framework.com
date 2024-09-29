@@ -3,18 +3,19 @@
 namespace Somecode\Framework\Http;
 
 use League\Container\Container;
+use Somecode\Framework\Event\EventDispatcher;
+use Somecode\Framework\Http\Events\ResponseEvent;
 use Somecode\Framework\Http\Exceptions\HttpException;
 use Somecode\Framework\Http\Middleware\RequestHandlerInterface;
-use Somecode\Framework\Routing\RouterInterface;
 
 class Kernel
 {
     private string $appEnv = 'production';
 
     public function __construct(
-        private RouterInterface $router,
-        private Container $container,
-        private RequestHandlerInterface $requestHandler
+        private readonly Container $container,
+        private readonly RequestHandlerInterface $requestHandler,
+        private readonly EventDispatcher $eventDispatcher
     ) {
         $this->appEnv = $this->container->get('APP_ENV');
     }
@@ -26,6 +27,8 @@ class Kernel
         } catch (\Exception $e) {
             $response = $this->createExceptionResponse($e);
         }
+
+        $this->eventDispatcher->dispatch(new ResponseEvent($request, $response));
 
         return $response;
     }
