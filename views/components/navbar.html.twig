@@ -16,10 +16,16 @@
                     <a class="nav-link" href="/posts/create">Добавить пост</a>
                 </li>
             </ul>
-            <form class="d-flex gap-2" role="search">
-                <a class="btn btn-primary" href="/login" type="submit">Enter</a>
-                <a class="btn btn-outline-success" href="/register" type="submit">Register</a>
-            </form>
+            <div class="d-flex gap-2" role="search">
+                {% if auth().check() %}
+                    <form action="/logout" method="post">
+                        <button class="btn btn-outline-danger" type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a class="btn btn-primary" href="/login" type="submit">Enter</a>
+                    <a class="btn btn-outline-success" href="/register" type="submit">Register</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </nav>
