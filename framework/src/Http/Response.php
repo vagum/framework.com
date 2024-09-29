@@ -33,4 +33,19 @@ class Response
     {
         return $this->statusCode;
     }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    public function setHeader(string $key, mixed $value): void
+    {
+        $this->headers[$key] = $value;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
 }
