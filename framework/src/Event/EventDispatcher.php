@@ -15,8 +15,21 @@ class EventDispatcher implements EventDispatcherInterface
         }
     }
 
+    public function addListener(string $event, callable $listener): static
+    {
+        $this->listeners[$event][] = $listener;
+
+        return $this;
+    }
+
     public function getListenersForEvent(object $event): iterable
     {
+        $eventClass = get_class($event);
+
+        if (array_key_exists($eventClass, $this->listeners)) {
+            return $this->listeners[$eventClass];
+        }
+
         return [];
     }
 }
