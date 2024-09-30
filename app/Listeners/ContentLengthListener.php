@@ -12,6 +12,5 @@ class ContentLengthListener
         if (array_key_exists('Content-Length', $response->getHeaders())) {
             $response->setHeader('Content-Length', strlen($response->getContent()));
         }
-
     }
 }
