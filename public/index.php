@@ -21,6 +21,10 @@ $eventDispatcher
     ->addListener(
         \Somecode\Framework\Http\Events\ResponseEvent::class,
         new \App\Listeners\ContentLengthListener
+    )
+    ->addListener(
+        \Somecode\Framework\Dbal\Event\EntityPersist::class,
+        new \App\Listeners\HandleEntityListener
     );
 
 $kernel = $container->get(Kernel::class);
