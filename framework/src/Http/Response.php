@@ -12,6 +12,11 @@ class Response
         http_response_code($this->statusCode);
     }
 
+    public function setStatusCode(int $statusCode): void
+    {
+        $this->statusCode = $statusCode;
+    }
+
     public function send(): void
     {
         echo $this->content;

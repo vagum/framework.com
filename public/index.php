@@ -14,10 +14,14 @@ $request = Request::createFromGlobals();
 $container = require BASE_PATH.'/config/services.php';
 
 $eventDispatcher = $container->get(EventDispatcher::class);
-$eventDispatcher->addListener(
-    \Somecode\Framework\Http\Events\ResponseEvent::class,
-    new \App\Listeners\ContentLengthListener
-);
+$eventDispatcher
+    ->addListener(\Somecode\Framework\Http\Events\ResponseEvent::class,
+        new \App\Listeners\InternalErrorListener
+    )
+    ->addListener(
+        \Somecode\Framework\Http\Events\ResponseEvent::class,
+        new \App\Listeners\ContentLengthListener
+    );
 
 $kernel = $container->get(Kernel::class);
 

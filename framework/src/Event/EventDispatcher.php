@@ -3,16 +3,22 @@
 namespace Somecode\Framework\Event;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
 
 class EventDispatcher implements EventDispatcherInterface
 {
     private array $listeners = [];
 
-    public function dispatch(object $event)
+    public function dispatch(object $event): object
     {
         foreach ($this->getListenersForEvent($event) as $listener) {
+            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                return $event;
+            }
             $listener($event);
         }
+
+        return $event;
     }
 
     public function addListener(string $event, callable $listener): static
